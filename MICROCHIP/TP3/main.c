@@ -1,8 +1,6 @@
 /*
  * TP3.c
  *
- * Created: 6/6/2024 18:34:12
- * Author : Ignacio
  */
 #include "utils.h"
 #include "rtc.h"
@@ -10,6 +8,7 @@
 #include "uart.h"
 #include "timer.h"
 #include "cli.h"
+#include "dht11.h"
 
 int main(void)
 {
@@ -38,6 +37,8 @@ int main(void)
 			char buffer[30]; // Buffer para almacenar la cadena de tiempo
 			sprintf(buffer, "Hora actual: %02d:%02d:%02d\r\n", now.hours, now.minutes, now.seconds);
 			UART_SendMsg(buffer); // Envía la cadena por UART
+			_delay_ms(500);
+			UART_SendMsg(DHT11_enviarInformacion());
 		}
 	}
 
