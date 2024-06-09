@@ -37,7 +37,7 @@ int main(void)
 			now = rtc_get_time();
 			char buffer[30]; // Buffer para almacenar la cadena de tiempo
 			sprintf(buffer, "Hora actual: %02d:%02d:%02d\r\n", now.hours, now.minutes, now.seconds);
-			UART_SendMsg(buffer); // Env�a la cadena por UART
+			UART_SendMsg(buffer); // Envía la cadena por UART
 		}
 	}
 
