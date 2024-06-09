@@ -51,7 +51,7 @@ ISR(TIMER1_COMPA_vect)
 {
 	count++;
 	// 1 segundo
-	if (count == 10)
+	if (count == 20)
 	{
 		count = 0;
 		flagClk = 1;
