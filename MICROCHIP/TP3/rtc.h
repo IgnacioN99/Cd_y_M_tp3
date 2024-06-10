@@ -27,5 +27,7 @@ typedef struct {
 void rtc_init(void);
 RTC_Time rtc_get_time(void);
 uint8_t bcd_to_dec(uint8_t bcd);
+uint8_t dec_to_bcd(uint8_t val);
+void rtc_set_time(RTC_Time time);
 
 #endif

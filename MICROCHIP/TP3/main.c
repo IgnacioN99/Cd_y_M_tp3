@@ -34,11 +34,12 @@ int main(void)
 		{
 			TIMER_ClearClkFlag();
 			now = rtc_get_time();
-			char buffer[30]; // Buffer para almacenar la cadena de tiempo
-			sprintf(buffer, "Hora actual: %02d:%02d:%02d\r\n", now.hours, now.minutes, now.seconds);
+			char buffer[54]; // Buffer para almacenar el mensaje
+			char time[33];
+			strcpy(buffer, DHT11_enviarInformacion());
+			sprintf(time, "FECHA: %02d/%02d/%02d HORA: %02d:%02d:%02d\r\n", now.date, now.month, now.year,now.hours, now.minutes, now.seconds);
+			strcat(buffer, time);
 			UART_SendMsg(buffer); // Envía la cadena por UART
-			_delay_ms(500);
-			UART_SendMsg(DHT11_enviarInformacion());
 		}
 	}
 

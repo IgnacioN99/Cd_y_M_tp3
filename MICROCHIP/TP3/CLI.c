@@ -5,7 +5,7 @@
 
 #include "uart.h"
 #include "timer.h"
-//#include "dht11.h"
+#include "dht11.h"
 #include "cli.h"
 
 static volatile uint8_t commandFlag = 0;
@@ -14,17 +14,13 @@ static char invalid[] = "command invalido\r";
 
 static int Get_Command(char command[])
 {
-	if (!strcmp(command, "ON"))
+	if (!strcmp(command, "s"))
 	{
-		return 0; // el comando es on
+		return 0;
 	}
-	if (!strcmp(command, "OFF"))
+	if (!strcmp(command, "s"))
 	{
-		return 1; // el comando es off
-	}
-	if (!strcmp(command, "RST"))
-	{
-		return 2; // el comando es rst
+		return 0;
 	}
 	return 3; // comando invalid
 }

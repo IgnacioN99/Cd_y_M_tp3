@@ -8,7 +8,8 @@ static char temperatura[50];
 static void DHT11_start(){
 	DDRC |= (1 << PINC0);    // Configurar el pin como salida
 	PORTC &= ~(1 << PINC0);  // Enviar señal de start al DHT11
-	_delay_ms(18);            // Esperar al menos 18 ms
+	_delay_ms(20);            // Esperar al menos 20 ms
+	PORTC |= (1 << PINC0);  // dht high
 	DDRC &= ~(1 << PINC0);   // Configurar el pin como entrada, sube automaticamente e valor a 1
 	while (  PINC & (1 << PINC0) ); //Espero hasta que el DHT11 envie señal de respuesta en 0
 	while ((PINC & (1 << PINC0)) == 0); //DHT11 envia señal en bajo, aproximadamente durante 80us, espero hasta que envie señal en alto
@@ -51,9 +52,8 @@ static uint8_t leerTemperatura(char *humedad, char *temperatura){
 	sei();
 	
 	if (checksum == datos[4]){
-		
-		sprintf(humedad, "Humedad Relativa: %2d.%1d", datos[0], datos[1]);
-		sprintf(temperatura, "Temperatura: %2d.%1d C", datos[2], datos[3]);
+		sprintf(temperatura, "TEMP: %2dC", datos[2]);
+		sprintf(humedad, "HUM: %2d", datos[0]);
 		return 1;
 	}
 	else
@@ -65,8 +65,8 @@ static uint8_t leerTemperatura(char *humedad, char *temperatura){
 char *DHT11_enviarInformacion(){
 	leerTemperatura(humedad, temperatura);
 	strcpy(mensaje, humedad);
-	strcat(mensaje, "\r");
+	strcat(mensaje, " ");
 	strcat(mensaje, temperatura);
-	strcat(mensaje, "\r");
+	strcat(mensaje, " ");
 	return mensaje;
 }
