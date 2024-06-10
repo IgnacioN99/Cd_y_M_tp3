@@ -7,8 +7,6 @@
 
 #ifndef RTC_H
 #define RTC_H
-
-#include <stdint.h>
 #include "utils.h"
 
 typedef struct {
@@ -25,9 +23,6 @@ typedef struct {
 #define I2C_READ 1
 
 void rtc_init(void);
-RTC_Time rtc_get_time(void);
-uint8_t bcd_to_dec(uint8_t bcd);
-uint8_t dec_to_bcd(uint8_t val);
-void rtc_set_time(RTC_Time time);
+char *RTC_enviarInformacion();
 
 #endif

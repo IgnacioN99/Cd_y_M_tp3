@@ -1,4 +1,5 @@
 #include "uart.h"
+#include "timer.h"
 
 #define USART_BAUDRATE 9600 // Desired Baud Rate
 #define BAUD_PRESCALER (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
@@ -16,7 +17,7 @@
 
 static char buffer_tx[10];
 static char buffer_rx[10];
-uint8_t cmd_flag = 0;
+uint8_t cmd_flag = 1;
 
 void UART_Init()
 {
@@ -71,46 +72,25 @@ char *UART_ReadBuffer()
 	return buffer_rx;
 }
 
-uint8_t UART_GetCmdFlag()
-{
-	return cmd_flag;
-}
-
-void UART_ClearCmdFlag()
-{
-	cmd_flag = 0;
-}
-
 /*
  * Interrupcion de recepcion
  * Disparada por la UART cuando el buffer esta listo para ser leido
  */
 ISR(USART_RX_vect)
 {
-	static volatile uint8_t i = 0;
-	unsigned char dato;
+	char dato;
 
 	dato = UDR0;
-
-	/* Detectar fin de linea */
-	if (dato == '\r')
-	{
-		buffer_rx[i] = '\0';
-		i = 0;
-		cmd_flag = 1;
-		UART_Disable_Rx();
-	}
-	/* Detectar borrado de caracter */
-	else
-	{
-		if (dato == '\b')
-			i--;
-		else
-		{
-			buffer_rx[i] = dato;
-			i++;
+	if(dato == 's' || dato == 'S'){
+		if (cmd_flag){
+			TIMER_Disable();
+			cmd_flag = 0;
+		}else{
+			TIMER_Enable();
+			cmd_flag = 1;
 		}
 	}
+
 }
 /*
 * The data register empty (UDREn) flag indicates whether the transmit buffer is ready to receive new data.

@@ -133,12 +133,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CLI.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="cli.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="dht11.c">
       <SubType>compile</SubType>
     </Compile>
