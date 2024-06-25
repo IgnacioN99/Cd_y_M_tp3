@@ -41,16 +41,12 @@ void TIMER_ClearClkFlag()
 	flagClk = 0;
 }
 
-void TIMER_ClearCount()
-{
-	count = 0;
-}
 
 // Rutina de servicio para el timer que se activa "On Compare Match", definido en el timer a 100ms
 ISR(TIMER1_COMPA_vect)
 {
 	count++;
-	// 1 segundo
+	// como 1 es 0,1 segundos, cuenta hasta 20 para que pasen 2 segundos
 	if (count == 20)
 	{
 		count = 0;

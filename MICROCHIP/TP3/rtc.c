@@ -11,9 +11,9 @@
 static RTC_Time now = {
 	.seconds = 0,
 	.minutes = 30,
-	.hours = 15,
-	.day = 2,  // Día de la semana (1 = Domingo, 7 = Sábado)
-	.date = 9,
+	.hours = 17,
+	.day = 1,  // Día de la semana (1 = Domingo --> 7 = Sábado)
+	.date = 25,
 	.month = 6,
 	.year = 24  // Últimos dos dígitos del año
 };
@@ -26,6 +26,22 @@ static uint8_t bcd_to_dec(uint8_t bcd) {
 
 static uint8_t dec_to_bcd(uint8_t val) {
 	return (val / 10 * 16) + (val % 10);
+}
+
+static void rtc_set_time(RTC_Time time) {
+	i2c_start();
+	i2c_write(DS3231_ADDRESS << 1 | I2C_WRITE); // Dirección de DS3231 + bit de escritura
+	i2c_write(0x00);  // Establecer el registro de segundos como dirección inicial
+
+	i2c_write(dec_to_bcd(time.seconds));//
+	i2c_write(dec_to_bcd(time.minutes));//
+	i2c_write(dec_to_bcd(time.hours));//		Establezco el dia y la hora inicial en el RTC
+	i2c_write(dec_to_bcd(time.day));//
+	i2c_write(dec_to_bcd(time.date));//
+	i2c_write(dec_to_bcd(time.month));//
+	i2c_write(dec_to_bcd(time.year % 100));  // Solo dos dígitos para el año
+
+	i2c_stop();
 }
 
 static RTC_Time rtc_get_time() {
@@ -48,22 +64,6 @@ static RTC_Time rtc_get_time() {
 	return current;
 }
 
-static void rtc_set_time(RTC_Time time) {
-	i2c_start();
-	i2c_write(DS3231_ADDRESS << 1 | I2C_WRITE);
-	i2c_write(0x00);  // Establecer el puntero de registro en segundos
-
-	i2c_write(dec_to_bcd(time.seconds));
-	i2c_write(dec_to_bcd(time.minutes));
-	i2c_write(dec_to_bcd(time.hours));
-	i2c_write(dec_to_bcd(time.day));
-	i2c_write(dec_to_bcd(time.date));
-	i2c_write(dec_to_bcd(time.month));
-	i2c_write(dec_to_bcd(time.year % 100));  // Solo dos dígitos para el año
-
-	i2c_stop();
-}
-
 void rtc_init() {
 	i2c_init(); // Asegura que I2C está inicializado
 	rtc_set_time(now);
@@ -72,7 +72,7 @@ void rtc_init() {
 char *RTC_enviarInformacion(){
 	RTC_Time current = rtc_get_time();
 	
-	sprintf(time, "FECHA: %02d/%02d/%02d HORA: %02d:%02d:%02d\r\n", current.date, current.month, current.year,current.hours, current.minutes, current.seconds);
+	sprintf(time, "FECHA: %02d/%02d/%02d HORA: %02d:%02d:%02d\r\n", current.date, current.month, current.year,current.hours, current.minutes, current.seconds);//Se guarda el valor de la fecha y hora en un string
 	return time;
 }
 
